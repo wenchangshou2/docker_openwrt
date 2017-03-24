@@ -11,10 +11,11 @@ RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 RUN apt-get install -y git-core build-essential libssl-dev libncurses5-dev unzip
 RUN apt-get install -y subversion mercurial
 RUN apt-get install -y build-essential subversion libncurses5-dev zlib1g-dev gawk gcc-multilib flex git-core gettext libssl-dev
-RUN mkdir -p /works/git
-RUN cd /works/git/
-RUN git clone https://git.oschina.net/wenchangshou/openwrt.git /works/git/
 
+RUN useradd -m openwrt  &&\
+    echo 'openwrt ALL=NOPASSWD: ALL' > /etc/sudoers.d/openwrt &&\
+    sudo -iu openwrt git clone https://git.oschina.net/wenchangshou/openwrt.git &&\
+    sudo -iu openwrt openwrt/scripts/feeds update
 
 EXPOSE 22
 CMD    ["/usr/sbin/sshd", "-D"]
